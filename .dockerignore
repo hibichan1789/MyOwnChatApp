@@ -11,6 +11,9 @@ MyOwnChatFrontend
 # .NET
 MyOwnChatApi
 
+# Postgres
+pgdata
+
 # Logs
 *.log
 
@@ -19,6 +22,8 @@ MyOwnChatApi
 .env.*
 appsettings.*.json
 
-# OS
+# OS/Editor
 .DS_Store
 Thumbs.db
+.vscode/
+.vs/
