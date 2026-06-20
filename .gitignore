@@ -10,6 +10,10 @@ dist/
 .env
 .env.production
 
+# Postgres
+pgdata
+
+
 # Secrets
 .env
 .env.production
