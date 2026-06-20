@@ -1,0 +1,24 @@
+# Git
+.git
+.gitignore
+.github
+/docs
+
+
+# Node / Frontend
+MyOwnChatFrontend
+
+# .NET
+MyOwnChatApi
+
+# Logs
+*.log
+
+# Secrets
+.env
+.env.*
+appsettings.*.json
+
+# OS
+.DS_Store
+Thumbs.db

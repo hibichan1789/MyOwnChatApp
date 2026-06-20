@@ -1,0 +1,23 @@
+# ASP.NET Core API
+bin/
+obj/
+out/
+*.log
+
+# Vite + TypeScript
+node_modules/
+dist/
+.env
+.env.production
+
+# Secrets
+.env
+.env.production
+appsettings.Development.json
+appsettings.Production.json
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.vs/
