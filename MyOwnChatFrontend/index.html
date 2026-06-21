@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>ログイン</title>
+    <script type="module" src="./main.ts"></script>
+    <link rel="stylesheet" href="./src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <form id="loginForm" class="bg-white p-6 rounded-xl shadow-xl w-80">
+        <h1 class="text-xl font-bold mb-4 text-center">ログイン</h1>
+
+        <div class="mb-3">
+            <label for="email" class="block text-sm mb-1">メールアドレス</label>
+            <input id="email" type="email"
+                class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-base p-2 w-full rounded"
+                placeholder="メールアドレス" required />
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="block text-sm mb-1">パスワード</label>
+            <input id="password" type="password"
+                class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-base p-2 w-full rounded"
+                placeholder="パスワード" required />
+        </div>
+
+        <button
+            class="bg-blue-500 text-white p-2 w-full rounded hover:bg-blue-600 hover:cursor-pointer transition">
+            ログイン
+        </button>
+
+        <p id="message" class="text-sm mt-3 text-center"></p>
+
+        <p class="text-center mt-4 text-sm">
+            <a href="/src/pages/register/register.html" class="text-blue-600 underline">
+                新規登録はこちら
+            </a>
+        </p>
+    </form>
+</body>
+
+</html>

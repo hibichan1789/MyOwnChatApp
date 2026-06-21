@@ -63,7 +63,7 @@ namespace MyOwnChatApi.Services.Auth
 
             // TODO: フロントエンドの画面ができたらフロントエンドのURLを記載する
             // 今は今から作るコントローラのエンドポイントを記載
-            var verifyUrl = $"http://localhost:5062/api/auth/verify?token={Uri.EscapeDataString(token)}";
+            var verifyUrl = $"http://localhost:5173/src/pages/verify/verify.html?token={Uri.EscapeDataString(token)}";
 
             var htmlBody = $@"
                 <p>{userName}様</p>
