@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>メール認証</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <script type="module" src="./verify.ts"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
+        <h1 class="text-xl font-bold mb-4">メール認証</h1>
+
+        <p id="status"></p>
+
+        <div id="loading" class="mt-4 text-gray-600">
+            認証処理中です…
+        </div>
+
+        <p id="loginLink" class="hidden text-center mt-4 text-base">
+            <a  href="/index.html"
+                class="text-blue-600 underline">
+                ログイン画面へ
+            </a>
+        </p>
+    </div>
+</body>
+
+</html>
