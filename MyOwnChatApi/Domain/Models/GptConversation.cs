@@ -1,28 +1,34 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+
 
 namespace MyOwnChatApi.Domain.Models
 {
     // CosmosDB用のモデルクラス
     public class GptConversation
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("userId")]
-        public int UserId { get; set; }
-        [JsonPropertyName("conversationId")]
-        public string ConvesationId { get; set; } = string.Empty;
+        // PartitionKey
+        [JsonProperty("userId")]
+        public string UserId { get; set; } = string.Empty;
+        [JsonProperty("conversationId")]
+        public string ConversationId { get; set; } = string.Empty;
+        [JsonProperty("messages")]
 
         public IEnumerable<Message> Messages { get; set; } = [];
+
+        [JsonProperty("summary")]
+        public string Summary { get; set; } = string.Empty;
     }
 
     public class Message
     {
-        [JsonPropertyName("role")]
+        [JsonProperty("role")]
         public string Role { get; set; } = string.Empty;
-        [JsonPropertyName("content")]
+        [JsonProperty("content")]
         public string Content { get; set; } = string.Empty;
-        [JsonPropertyName("timestamp")]
+        [JsonProperty("timestamp")]
         public DateTimeOffset Timestamp { get; set; }
     }
 }

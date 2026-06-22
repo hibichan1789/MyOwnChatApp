@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyOwnChatApi.Context;
 using System.Text;
 using MyOwnChatApi.Services.Auth;
+using MyOwnChatApi.Services.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +87,12 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<ILogoutService,  LogoutService>();
-
+// CosmosDB
+builder.Services.AddScoped<ICosmosDbService, CosmosDbService>();
+// AIFoundry
+builder.Services.AddScoped<IAiFoundryService, AiFoundryService>();
+// ChatService
+builder.Services.AddScoped<IChatService, ChatService>();
 
 var app = builder.Build();
 
