@@ -63,7 +63,7 @@ namespace MyOwnChatApi.Services.Auth
 
             // TODO: フロントエンドの画面ができたらフロントエンドのURLを記載する
             // 今は今から作るコントローラのエンドポイントを記載
-            var verifyUrl = $"https://proud-coast-04acbfb00.7.azurestaticapps.net/index.html/src/pages/verify/verify.html?token={Uri.EscapeDataString(token)}";
+            var verifyUrl = $"https://proud-coast-04acbfb00.7.azurestaticapps.net/src/pages/verify/verify.html?token={Uri.EscapeDataString(token)}";
 
             var htmlBody = $@"
                 <p>{userName}様</p>
