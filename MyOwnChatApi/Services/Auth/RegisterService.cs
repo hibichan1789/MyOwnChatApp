@@ -51,7 +51,7 @@ namespace MyOwnChatApi.Services.Auth
             await _db.SaveChangesAsync();
             _logger.LogInformation("UserId={UserId},Email={Email}のユーザーを登録しました",user.Id, user.Email);
 
-            // TODO: あとでazure communication serviceを作成してメール送信を追加
+            
             await SendVerificationEmailAsync(user.UserName, user.Email, emailVerificationToken);
         }
 
@@ -63,7 +63,7 @@ namespace MyOwnChatApi.Services.Auth
 
             // TODO: フロントエンドの画面ができたらフロントエンドのURLを記載する
             // 今は今から作るコントローラのエンドポイントを記載
-            var verifyUrl = $"http://localhost:5173/src/pages/verify/verify.html?token={Uri.EscapeDataString(token)}";
+            var verifyUrl = $"https://proud-coast-04acbfb00.7.azurestaticapps.net/index.html/src/pages/verify/verify.html?token={Uri.EscapeDataString(token)}";
 
             var htmlBody = $@"
                 <p>{userName}様</p>
