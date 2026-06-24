@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+/* サイドバーが閉じているときは中身を非表示 */
+.w-12 #conversationList {
+    display: none;
+}
+
+
+
+/* アイコンだけ表示したい場合 */
+.w-12 #newChatBtn::before {
+    font-size: 20px;
+    text-indent: 0;
+}
+
+/* アイコンだけ表示したい場合 */
+.w-12 #logoutBtn::before {
+    font-size: 20px;
+    text-indent: 0;
+}
+
+/*選択されている会話*/
+.selected {
+    background-color: #374151;
+}

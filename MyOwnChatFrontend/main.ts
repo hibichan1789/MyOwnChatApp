@@ -25,8 +25,8 @@ loginForm.addEventListener("submit", async (e) => {
         message.textContent = "ログイン成功しました";
         message.className = "text-green-600 text-sm text-center mt-2"
 
-        // TODO: チャット画面へ遷移
-        //location.href = "/src/pages/home/home.html";
+        
+        location.href = "/src/pages/chat/chat.html";
     }
     catch (error: any) {
         const errorMessage = error.response?.data?.message || "ログインに失敗しました";
