@@ -154,7 +154,7 @@ chatForm.addEventListener("submit", async (e) => {
             if (data === "[DONE]") {
                 await loadConversationList();
 
-                return;
+                break;
             }
 
             // 最初のdataはconversationId

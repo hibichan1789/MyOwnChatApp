@@ -1,5 +1,6 @@
 ﻿using MyOwnChatApi.Domain.DTOs.Chat;
 using MyOwnChatApi.Domain.Models;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -40,24 +41,33 @@ namespace MyOwnChatApi.Services.Chat
             var contextMessages = await _cosmos.GetLast3TurnsAsync(userId, conversationId);
 
 
+            
+
+            
+            // AIに投げる(時間も計測する)
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            var aiReply = await _ai.GenerateReplyAsync(conversation.Summary, contextMessages, chatRequest.Content);
+            stopwatch.Stop();
+
+
             var updateMessages = conversation.Messages.ToList();
             // ユーザーの新規メッセージ
+            var now = DateTime.UtcNow;
             Message newUserMessage = new Message
             {
                 Role = "user",
                 Content = chatRequest.Content,
-                Timestamp = DateTimeOffset.UtcNow
+                ConsumedTokens = aiReply.PromptTokens,
+                Timestamp = now
             };
             updateMessages.Add(newUserMessage);
 
-            
-            // AIに投げる
-            var aiReply = await _ai.GenerateReplyAsync(conversation.Summary, contextMessages, chatRequest.Content);
             Message newAiMessage = new Message
             {
                 Role = "assistant",
-                Content = aiReply,
-                Timestamp = DateTimeOffset.UtcNow
+                Content = aiReply.Reply,
+                ConsumedTokens = aiReply.CompletionTokens,
+                Timestamp = now + stopwatch.Elapsed
             };
             updateMessages.Add(newAiMessage);
 
@@ -84,10 +94,11 @@ namespace MyOwnChatApi.Services.Chat
             return new ChatResponseDto
             {
                 ConversationId = conversationId,
-                Reply = aiReply
+                Reply = aiReply.Reply
             };
         }
 
+        // Stream版
         public async IAsyncEnumerable<string> SendMessageStreamAsync(string userId, ChatRequestDto chatRequest, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             string conversationId = chatRequest.ConversationId!;
@@ -106,24 +117,16 @@ namespace MyOwnChatApi.Services.Chat
             // 直近3往復分の会話を取得
             var contextMessages = await _cosmos.GetLast3TurnsAsync(userId, conversationId);
 
-            var updateMessages = conversation.Messages.ToList();
 
-            // ユーザーの新規メッセージ
-            var newUserMessage = new Message
-            {
-                Role = "user",
-                Content = chatRequest.Content,
-                Timestamp = DateTimeOffset.UtcNow
-            };
-            updateMessages.Add(newUserMessage);
-
-
+            var usageInfo = new UsageInfo();
             // AI返信をStreamで受け取る
             var sb = new StringBuilder();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             await foreach(var delta in _ai.GenerateReplyStreamAsync(
                 conversation.Summary,
                 contextMessages,
                 chatRequest.Content,
+                usageInfo,
                 cancellationToken
                 ).WithCancellation(cancellationToken))
             {
@@ -133,14 +136,27 @@ namespace MyOwnChatApi.Services.Chat
                 // 呼び出し元にチャンクを返す
                 yield return delta;
             }
+            stopwatch.Stop();
 
+
+            var updateMessages = conversation.Messages.ToList();
+            // ユーザーの新規メッセージ
+            var now = DateTime.UtcNow;
+            var newUserMessage = new Message
+            {
+                Role = "user",
+                Content = chatRequest.Content,
+                ConsumedTokens = usageInfo.PromptTokens,
+                Timestamp = now
+            };
+            updateMessages.Add(newUserMessage);
             var fullReply = sb.ToString();
-
             var newAiMessage = new Message
             {
                 Role = "assistant",
                 Content = fullReply,
-                Timestamp = DateTimeOffset.UtcNow
+                ConsumedTokens = usageInfo.CompletionTokens,
+                Timestamp = now + stopwatch.Elapsed
             };
             updateMessages.Add(newAiMessage);
 
