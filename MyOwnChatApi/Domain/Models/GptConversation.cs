@@ -30,5 +30,7 @@ namespace MyOwnChatApi.Domain.Models
         public string Content { get; set; } = string.Empty;
         [JsonProperty("timestamp")]
         public DateTimeOffset Timestamp { get; set; }
+        [JsonProperty("consumedTokens")]
+        public int ConsumedTokens { get; set; }
     }
 }

@@ -2,7 +2,6 @@
 
 namespace MyOwnChatApi.Domain.DTOs.Chat
 { 
-        // CosmosDB用のモデルクラス
         public class ConversationDto
         {
             public string ConversationId { get; set; } = string.Empty;

@@ -5,6 +5,7 @@ using System.ClientModel;
 using OpenAI.Chat;
 using System.Runtime.CompilerServices;
 using System.Text;
+using MyOwnChatApi.Domain.DTOs.Chat;
 
 
 
@@ -27,7 +28,7 @@ namespace MyOwnChatApi.Services.Chat
         }
 
         // 同期版
-        public async Task<string> GenerateReplyAsync(string summary, List<Message> contextMessages, string userMessage)
+        public async Task<AiReplyResultDto> GenerateReplyAsync(string summary, List<Message> contextMessages, string userMessage)
         {
             var chatMessages = new List<ChatMessage>();
             if (!string.IsNullOrWhiteSpace(summary))
@@ -59,7 +60,15 @@ namespace MyOwnChatApi.Services.Chat
 
             _logger.LogInformation("AI Foundryからの返答: {Reply}", reply);
 
-            return reply;
+            var usage = response.Value.Usage;
+            
+
+            return new AiReplyResultDto
+            {
+                Reply = reply,
+                PromptTokens = usage.InputTokenCount,
+                CompletionTokens = usage.OutputTokenCount
+            };
         }
 
         // Stream版
@@ -67,6 +76,7 @@ namespace MyOwnChatApi.Services.Chat
             string summary,
             List<Message> contextMessages,
             string userMessage,
+            UsageInfo usageInfo,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var chatMessages = new List<ChatMessage>();
@@ -89,30 +99,39 @@ namespace MyOwnChatApi.Services.Chat
 
             chatMessages.Add(new UserChatMessage(userMessage));
 
+            
+
             _logger.LogInformation("AI Foundryにリクエスト送信中...");
             var streamingResult = _cahtClient.CompleteChatStreamingAsync(chatMessages, cancellationToken: cancellationToken);
             var sb = new StringBuilder();
 
             await foreach(var update in streamingResult.WithCancellation(cancellationToken))
             {
-                if(update.ContentUpdate == null)
+
+                if(update.Usage != null)
                 {
-                    continue;
+                    usageInfo.PromptTokens = update.Usage.InputTokenCount;
+                    usageInfo.CompletionTokens = update.Usage.OutputTokenCount;
                 }
-                // ContentUpdateにdeltaが入ってくる
-                foreach(var contentPart in update.ContentUpdate)
+
+
+                if (update.ContentUpdate != null)
                 {
-                    var delta = contentPart.Text;
-                    if (string.IsNullOrWhiteSpace(delta))
+                    // ContentUpdateにdeltaが入ってくる
+                    foreach (var contentPart in update.ContentUpdate)
                     {
-                        continue;
+                        var delta = contentPart.Text;
+                        if (string.IsNullOrWhiteSpace(delta))
+                        {
+                            continue;
+                        }
+
+                        // 全文用に蓄積
+                        sb.Append(delta);
+
+                        // 呼び出し元にチャンクを返す
+                        yield return delta;
                     }
-
-                    // 全文用に蓄積
-                    sb.Append(delta);
-
-                    // 呼び出し元にチャンクを返す
-                    yield return delta;
                 }
             }
 
