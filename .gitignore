@@ -3,7 +3,7 @@ bin/
 obj/
 out/
 *.log
-
+PublishProfiles/
 # Vite + TypeScript
 node_modules/
 dist/
